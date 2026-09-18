@@ -1,17 +1,33 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-bg: #f2f1ec;
+  /* Brand colors - extracted from the real HERR & POLITZ logo */
+  --color-hp-primary: #e2001a;
+  --color-hp-primary-dark: #b50014;
+  --color-hp-dark: #141312;
+  --color-hp-light: #f4f2ee;
+  --color-hp-concrete: #d9d5cc;
+  --color-hp-border: #dcd8cf;
+  --color-hp-text: #16150f;
+  --color-hp-muted: #6f6c62;
+
+  /* Material colors */
+  --color-sand: #cbbfa4;
+  --color-asphalt: #2b2a27;
+  --color-steel: #8b8d8a;
+
+  /* Back-compat aliases used across components */
+  --color-bg: var(--color-hp-light);
   --color-surface: #ffffff;
-  --color-ink: #111111;
-  --color-muted: #737373;
-  --color-line: #dcdad2;
-  --color-dark: #111210;
-  --color-dark-line: rgba(242, 241, 236, 0.14);
-  --color-dark-text: #f2f1ec;
-  --color-dark-muted: #9a9993;
-  --color-accent: #e02b20;
-  --color-accent-dark: #b82118;
+  --color-ink: var(--color-hp-text);
+  --color-muted: var(--color-hp-muted);
+  --color-line: var(--color-hp-border);
+  --color-dark: var(--color-hp-dark);
+  --color-dark-line: rgba(244, 242, 238, 0.14);
+  --color-dark-text: var(--color-hp-light);
+  --color-dark-muted: #9a988f;
+  --color-accent: var(--color-hp-primary);
+  --color-accent-dark: var(--color-hp-primary-dark);
 
   --font-display: var(--font-geist-sans);
   --font-sans: var(--font-geist-sans);
@@ -40,12 +56,12 @@ body {
 
 ::selection {
   background: var(--color-accent);
-  color: var(--color-dark-text);
+  color: #ffffff;
 }
 
 .dark-section ::selection {
   background: var(--color-accent);
-  color: var(--color-dark-text);
+  color: #ffffff;
 }
 
 :focus-visible {
@@ -70,4 +86,26 @@ body {
 
 .text-balance {
   text-wrap: balance;
+}
+
+/* ---------- Technical meta label ---------- */
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---------- Project grid backdrop ---------- */
+.project-grid-lines {
+  background-image:
+    linear-gradient(to right, var(--color-hp-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-hp-border) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.dark-section .project-grid-lines {
+  background-image:
+    linear-gradient(to right, rgba(244, 242, 238, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(244, 242, 238, 0.08) 1px, transparent 1px);
 }

@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { mainNav } from "@/data/navigation";
 import { locations } from "@/data/locations";
+import { useInquiry } from "@/components/inquiry/InquiryProvider";
 import { cn } from "@/lib/cn";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const primaryPhone = locations[0];
+  const { openInquiry } = useInquiry();
 
   useEffect(() => {
     document.documentElement.style.overflow = menuOpen ? "hidden" : "";
@@ -54,12 +56,13 @@ export function Header() {
             >
               {primaryPhone.phone}
             </a>
-            <Link
-              href="/kontakt"
+            <button
+              type="button"
+              onClick={() => openInquiry()}
               className="bg-dark px-5 py-2.5 text-[13px] font-semibold uppercase tracking-wide text-dark-text transition-colors hover:bg-accent"
             >
-              Anfrage senden
-            </Link>
+              Projekt besprechen
+            </button>
           </div>
 
           <button
@@ -118,14 +121,18 @@ export function Header() {
               transition={{ delay: 0.3, duration: 0.4 }}
               className="flex flex-col gap-4 border-t border-dark-line pt-6"
             >
-              <a
-                href={`tel:${primaryPhone.phoneHref}`}
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  openInquiry();
+                }}
                 className="bg-accent px-5 py-4 text-center text-sm font-semibold uppercase tracking-wide text-dark-text"
               >
+                Projekt besprechen
+              </button>
+              <a href={`tel:${primaryPhone.phoneHref}`} className="text-sm text-dark-muted">
                 Jetzt anrufen · {primaryPhone.phone}
-              </a>
-              <a href={`mailto:info@hp-bau.de`} className="text-sm text-dark-muted">
-                info@hp-bau.de
               </a>
             </motion.div>
           </motion.div>

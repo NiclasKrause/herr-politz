@@ -3,14 +3,7 @@ import { company } from "@/data/company";
 import { services } from "@/data/services";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = [
-    "",
-    "/projekte",
-    "/unternehmen",
-    "/ansprechpartner",
-    "/karriere",
-    "/kontakt",
-  ];
+  const staticRoutes = ["", "/ansprechpartner", "/karriere", "/hinweisgeberschutzgesetz"];
 
   const serviceRoutes = services.map((s) => `/${s.slug}`);
 

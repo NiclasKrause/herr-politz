@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ServiceDetailPage } from "@/components/ServiceDetailPage";
+import { ServiceDetail } from "@/components/ServiceDetail";
 import { getServiceBySlug } from "@/data/services";
 
 const service = getServiceBySlug("tiefbau")!;
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function TiefbauPage() {
-  return <ServiceDetailPage service={service} />;
+  return <ServiceDetail service={service} />;
 }

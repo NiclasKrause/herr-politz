@@ -1,143 +1,174 @@
 "use client";
 
-import { useId, useState, type FormEvent } from "react";
-import { useSearchParams } from "next/navigation";
-import { jobs } from "@/data/jobs";
-import { company } from "@/data/company";
+import { useState, type FormEvent } from "react";
+import { jobs, skillLabels, type Job } from "@/data/jobs";
 import { cn } from "@/lib/cn";
 
-const inputClasses =
-  "w-full border-b border-line bg-transparent py-2 text-base text-ink outline-none transition-colors placeholder:text-muted focus:border-accent";
+export function ApplicationForm({ preselectedSlug }: { preselectedSlug?: string }) {
+  const [jobSlug, setJobSlug] = useState(preselectedSlug || jobs[0]?.slug || "");
+  const [files, setFiles] = useState<File[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
 
-export function ApplicationForm() {
-  const searchParams = useSearchParams();
-  const preselected = searchParams.get("stelle") ?? "";
-  const [submitted, setSubmitted] = useState(false);
-  const formId = useId();
+  const job = jobs.find((j) => j.slug === jobSlug);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const lines = [
-      `Name: ${data.get("name")}`,
-      `E-Mail: ${data.get("email")}`,
-      `Telefon: ${data.get("phone") || "—"}`,
-      `Stelle: ${data.get("job")}`,
-      `Berufserfahrung: ${data.get("experience") || "—"}`,
-      "",
-      "Nachricht:",
-      `${data.get("message") || "—"}`,
-      "",
-      "Bitte Lebenslauf als Anhang an diese E-Mail hinzufügen.",
-    ].join("\n");
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    const fd = new FormData(e.currentTarget);
+    fd.set("jobSlug", jobSlug);
+    fd.set("jobTitle", job?.title || "");
+    files.forEach((f) => fd.append("files", f));
 
-    const subject = encodeURIComponent(`Bewerbung – ${data.get("job")}`);
-    const body = encodeURIComponent(lines);
-    window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
+    if (!(fd.get("privacyAccepted") === "true")) {
+      setError("Bitte bestätigen Sie die Datenschutzerklärung.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/karriere", { method: "POST", body: fd });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Bewerbung konnte nicht gesendet werden.");
+      }
+      setDone(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Bewerbung konnte nicht gesendet werden.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
-  if (submitted) {
+  if (done) {
     return (
-      <div className="max-w-lg border border-line bg-surface p-8">
-        <p className="font-display text-xl font-bold uppercase tracking-tight">
-          Danke für Ihre Bewerbung.
-        </p>
-        <p className="mt-3 text-sm leading-relaxed text-muted">
-          Ihr E-Mail-Programm sollte sich gerade geöffnet haben. Bitte fügen Sie
-          Ihren Lebenslauf dort als Anhang hinzu und senden Sie die E-Mail ab.
-          Alternativ erreichen Sie uns direkt unter{" "}
-          <a href={`mailto:${company.email}`} className="underline">
-            {company.email}
-          </a>
-          .
-        </p>
+      <div className="border border-hp-border bg-white p-10 text-center">
+        <span className="meta-label text-hp-muted">Bewerbung / gesendet</span>
+        <h3 className="font-display mt-3 text-2xl font-bold uppercase tracking-tight text-hp-text">Vielen Dank.</h3>
+        <p className="mt-2 text-hp-muted">Wir haben Ihre Bewerbung erhalten und melden uns bei Ihnen.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-x-10 gap-y-7 md:grid-cols-2">
-      <Field label="Name" htmlFor={`${formId}-name`}>
-        <input id={`${formId}-name`} name="name" type="text" required className={inputClasses} />
-      </Field>
-      <Field label="E-Mail" htmlFor={`${formId}-email`}>
-        <input id={`${formId}-email`} name="email" type="email" required className={inputClasses} />
-      </Field>
-      <Field label="Telefon" htmlFor={`${formId}-phone`}>
-        <input id={`${formId}-phone`} name="phone" type="tel" className={inputClasses} />
-      </Field>
-      <Field label="Stelle" htmlFor={`${formId}-job`}>
-        <select
-          id={`${formId}-job`}
-          name="job"
-          defaultValue={preselected || jobs[0]?.title}
-          required
-          className={cn(inputClasses, "bg-bg")}
-        >
-          {jobs.map((job) => (
-            <option key={job.slug} value={job.title}>
-              {job.title}
-            </option>
-          ))}
-          <option value="Initiativbewerbung">Initiativbewerbung</option>
-        </select>
-      </Field>
-      <Field label="Berufserfahrung" htmlFor={`${formId}-experience`} full>
-        <input
-          id={`${formId}-experience`}
-          name="experience"
-          type="text"
-          placeholder="z. B. 5 Jahre im Tiefbau"
-          className={inputClasses}
-        />
-      </Field>
-      <Field label="Nachricht" htmlFor={`${formId}-message`} full>
-        <textarea id={`${formId}-message`} name="message" rows={4} className={cn(inputClasses, "resize-none")} />
-      </Field>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-8 border border-hp-border bg-white p-6 sm:p-10">
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
-      <div className="flex items-start gap-3 md:col-span-2">
-        <input
-          id={`${formId}-privacy`}
-          name="privacy"
-          type="checkbox"
-          required
-          className="mt-1 h-4 w-4 shrink-0 border border-line bg-transparent accent-[var(--color-accent)]"
-        />
-        <label htmlFor={`${formId}-privacy`} className="text-xs leading-relaxed text-muted">
-          Ich stimme zu, dass meine Angaben zur Bearbeitung meiner Bewerbung
-          gespeichert werden. Weitere Informationen in der Datenschutzerklärung.
-        </label>
+      <div>
+        <span className="meta-label mb-3 block text-hp-muted">01 / Für welche Stelle?</span>
+        <div className="flex flex-wrap gap-2">
+          {jobs.map((j) => (
+            <button
+              key={j.slug}
+              type="button"
+              onClick={() => setJobSlug(j.slug)}
+              className={cn(
+                "border px-4 py-2 text-[13px] font-semibold uppercase tracking-wide transition-colors",
+                jobSlug === j.slug
+                  ? "border-hp-primary bg-hp-primary text-white"
+                  : "border-hp-border text-hp-text hover:border-hp-text",
+              )}
+            >
+              {j.title}
+            </button>
+          ))}
+        </div>
       </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <span className="meta-label mb-2 block text-hp-muted">02 / Wer bist du?</span>
+          <input
+            type="text"
+            name="name"
+            required
+            placeholder="Name"
+            className="w-full border border-hp-border bg-white px-4 py-3 text-sm text-hp-text outline-none focus:border-hp-text"
+          />
+        </div>
+        <div>
+          <span className="meta-label mb-2 block text-hp-muted">Was kannst du?</span>
+          <select
+            name="skill"
+            required
+            defaultValue={job?.skill || ""}
+            className="w-full border border-hp-border bg-white px-4 py-3 text-sm text-hp-text outline-none focus:border-hp-text"
+          >
+            <option value="" disabled>
+              Bitte auswählen
+            </option>
+            {Object.entries(skillLabels).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <span className="meta-label mb-2 block text-hp-muted">03 / Wie erreichen wir dich?</span>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <input
+            type="tel"
+            name="phone"
+            required
+            placeholder="Telefon"
+            className="w-full border border-hp-border bg-white px-4 py-3 text-sm text-hp-text outline-none focus:border-hp-text"
+          />
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="E-Mail"
+            className="w-full border border-hp-border bg-white px-4 py-3 text-sm text-hp-text outline-none focus:border-hp-text"
+          />
+        </div>
+      </div>
+
+      <label className="block">
+        <span className="meta-label mb-2 block text-hp-muted">Nachricht (optional)</span>
+        <textarea
+          name="message"
+          rows={3}
+          className="w-full border border-hp-border bg-white px-4 py-3 text-sm text-hp-text outline-none focus:border-hp-text"
+        />
+      </label>
+
+      <label className="block">
+        <span className="meta-label mb-2 block text-hp-muted">Lebenslauf / Unterlagen (optional)</span>
+        <input
+          type="file"
+          multiple
+          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+          onChange={(e) => setFiles(Array.from(e.target.files || []).slice(0, 5))}
+          className="block w-full text-sm text-hp-muted file:mr-4 file:border file:border-hp-border file:bg-white file:px-4 file:py-2 file:text-[13px] file:font-semibold file:uppercase file:tracking-wide"
+        />
+      </label>
+
+      <label className="flex items-start gap-3 text-sm text-hp-muted">
+        <input type="checkbox" name="privacyAccepted" value="true" required className="mt-1" />
+        <span>
+          Ich stimme der Verarbeitung meiner Daten gemäß der{" "}
+          <a href="/datenschutz" target="_blank" className="underline">
+            Datenschutzerklärung
+          </a>{" "}
+          zu.
+        </span>
+      </label>
+
+      {error ? <p className="text-sm text-hp-primary">{error}</p> : null}
 
       <button
         type="submit"
-        className="group mt-2 inline-flex w-fit items-center gap-2 bg-dark px-6 py-3.5 text-sm font-semibold uppercase tracking-wide text-dark-text transition-colors hover:bg-accent md:col-span-2"
+        disabled={submitting}
+        className="bg-hp-dark px-6 py-4 text-[13px] font-semibold uppercase tracking-wide text-white transition-colors hover:bg-hp-primary disabled:opacity-60"
       >
-        Bewerbung absenden
-        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        {submitting ? "Wird gesendet …" : "04 / Absenden"}
       </button>
     </form>
   );
 }
 
-function Field({
-  label,
-  htmlFor,
-  children,
-  full,
-}: {
-  label: string;
-  htmlFor: string;
-  children: React.ReactNode;
-  full?: boolean;
-}) {
-  return (
-    <div className={cn("flex flex-col gap-2", full && "md:col-span-2")}>
-      <label htmlFor={htmlFor} className="text-xs font-semibold uppercase tracking-widest text-muted">
-        {label}
-      </label>
-      {children}
-    </div>
-  );
-}
+export type { Job };

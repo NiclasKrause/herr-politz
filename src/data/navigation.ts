@@ -4,30 +4,22 @@ export interface NavLink {
 }
 
 export const mainNav: NavLink[] = [
-  { label: "Leistungen", href: "/#leistungen" },
-  { label: "Projekte", href: "/projekte" },
-  { label: "Unternehmen", href: "/unternehmen" },
+  { label: "Tiefbau", href: "/tiefbau" },
+  { label: "Hochbau", href: "/hochbau" },
+  { label: "Tankplätze / LAU", href: "/tankplaetze-lau" },
   { label: "Karriere", href: "/karriere" },
-  { label: "Ansprechpartner", href: "/ansprechpartner" },
-  { label: "Kontakt", href: "/kontakt" },
 ];
 
 export const footerServiceNav: NavLink[] = [
   { label: "Tiefbau", href: "/tiefbau" },
   { label: "Hochbau", href: "/hochbau" },
-  { label: "Tankplätze & LAU-Anlagen", href: "/tankplaetze-lau-anlagen" },
+  { label: "Tankplätze & LAU-Anlagen", href: "/tankplaetze-lau" },
 ];
 
 export const footerCompanyNav: NavLink[] = [
-  { label: "Über uns", href: "/unternehmen" },
   { label: "Ansprechpartner", href: "/ansprechpartner" },
   { label: "Karriere", href: "/karriere" },
-  { label: "Projekte", href: "/projekte" },
-];
-
-export const footerServiceLinks: NavLink[] = [
-  { label: "Kontakt", href: "/kontakt" },
-  { label: "Hinweisgeberschutz", href: "/hinweisgeberschutzgesetz" },
+  { label: "Hinweisgeberschutzgesetz", href: "/hinweisgeberschutzgesetz" },
 ];
 
 export const footerLegalNav: NavLink[] = [

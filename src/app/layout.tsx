@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { MotionConfig } from "motion/react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { InquiryProvider } from "@/components/inquiry/InquiryProvider";
+import { InquiryDrawer } from "@/components/inquiry/InquiryDrawer";
 import { company } from "@/data/company";
 import { locations } from "@/data/locations";
 import "./globals.css";
@@ -81,9 +83,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <MotionConfig reducedMotion="user">
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <InquiryProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+            <InquiryDrawer />
+          </InquiryProvider>
         </MotionConfig>
       </body>
     </html>

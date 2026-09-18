@@ -2,11 +2,15 @@ export interface ServiceArea {
   index: string;
   slug: string;
   title: string;
-  subline: string;
+  layerHeadline: string[];
+  heroHeadline: string[];
+  heroSubline: string;
   intro: string;
+  secondText: string;
   leistungen: string[];
   ctaLabel: string;
   navLabel: string;
+  tag: string;
 }
 
 export const services: ServiceArea[] = [
@@ -14,13 +18,18 @@ export const services: ServiceArea[] = [
     index: "01",
     slug: "tiefbau",
     title: "TIEFBAU",
-    subline: "DORT ANFANGEN, WO MAN SPÄTER NICHTS MEHR SIEHT.",
+    layerHeadline: ["DORT, WO SPÄTER", "ALLES DARAUF STEHT."],
+    heroHeadline: ["DAS PROJEKT", "BEGINNT UNTER", "DER OBERFLÄCHE."],
+    heroSubline:
+      "Gründung, Erdarbeiten, Entwässerung und Außenanlagen schaffen die Voraussetzungen für alles, was danach entsteht.",
     intro:
+      "Im Tiefbau entscheidet sich früh, ob ein Projekt später reibungslos funktioniert. Deshalb denken wir Erdarbeiten, Entwässerung, Gründung und Außenanlagen nicht isoliert, sondern als Teil des gesamten Bauablaufs.",
+    secondText:
       "Unser Leistungsspektrum im Tiefbau reicht von anspruchsvollen Gründungsarbeiten über schweren Erdbau bis zu Entwässerungssystemen, Straßenbau- und Pflasterarbeiten.",
     leistungen: [
       "Gründungsarbeiten",
       "Schwerer Erdbau",
-      "Entwässerungssysteme",
+      "Entwässerung",
       "Straßenbau",
       "Pflasterarbeiten",
       "Abwasserbehandlungsanlagen",
@@ -28,47 +37,60 @@ export const services: ServiceArea[] = [
       "Rückhalteanlagen",
       "Versickerungsrigolen",
     ],
-    ctaLabel: "TIEFBAU ENTDECKEN",
+    ctaLabel: "TIEFBAU ANFRAGEN",
     navLabel: "Tiefbau",
+    tag: "TIEFBAU",
   },
   {
     index: "02",
-    slug: "tankplaetze-lau-anlagen",
-    title: "TANKPLÄTZE & LAU-ANLAGEN",
-    subline: "SICHERHEIT BEGINNT IM UNTERGRUND.",
+    slug: "tankplaetze-lau",
+    title: "TANKPLÄTZE / LAU",
+    layerHeadline: ["WO UMWELTSCHUTZ", "AUF BAUTECHNIK", "TRIFFT."],
+    heroHeadline: ["DICHTHEIT", "IST KEINE", "DETAILFRAGE."],
+    heroSubline:
+      "Tankplätze und LAU-Anlagen stellen besondere Anforderungen an Konstruktion, Abdichtung und Ausführung.",
     intro:
-      "Tankplätze und LAU-Anlagen nach WHG gehören zu unserem ursprünglichen Kerngeschäft. Gemeinsam mit erfahrenen Partnern aus Tanktechnik und Rohrleitungsbau realisieren wir Lösungen von der schlüsselfertigen Tankstelle bis zur kleinteiligen Fugensanierung.",
+      "Bei Flächen und Anlagen zum Umgang mit wassergefährdenden Stoffen reicht es nicht, dass eine Konstruktion gut aussieht. Sie muss technisch funktionieren, dauerhaft dicht sein und in den betrieblichen Ablauf passen.",
+    secondText:
+      "HERR & POLITZ verbindet bauliche Ausführung mit der Erfahrung aus einem Geschäftsfeld, das seit den Anfängen des Unternehmens eine besondere Rolle spielt.",
     leistungen: [
-      "Tankplätze nach WHG",
-      "LAU-Anlagen – Neubau",
-      "LAU-Anlagen – Sanierung",
+      "Neubau von Tankplätzen und LAU-Anlagen",
+      "Sanierung bestehender Anlagen",
       "Betankungsflächen",
       "Waschplätze",
       "Fugensanierung",
       "Fettabscheider",
       "Ölabscheider",
       "Koaleszenzabscheider",
+      "Tankstellenlösungen (mit Partnern)",
+      "Rohrleitungsbau in Zusammenarbeit mit Partnern",
     ],
-    ctaLabel: "FACHBEREICH ANSEHEN",
-    navLabel: "Tankplätze & LAU-Anlagen",
+    ctaLabel: "LAU-PROJEKT BESPRECHEN",
+    navLabel: "Tankplätze / LAU",
+    tag: "TANKPLÄTZE / LAU-ANLAGEN / WHG",
   },
   {
     index: "03",
     slug: "hochbau",
     title: "HOCHBAU",
-    subline: "WAS BLEIBT, MUSS RICHTIG GEBAUT SEIN.",
+    layerHeadline: ["WENN AUS", "STRUKTUR", "GEBÄUDE WIRD."],
+    heroHeadline: ["ROHBAU", "IST KEIN", "ROHZUSTAND."],
+    heroSubline: "Er ist die Grundlage für alle Gewerke, die folgen.",
     intro:
-      "Die Erstellung von Rohbauten aus Mauerwerk und im Stahlbetonbau – konventionell, in Halbfertigteil- oder Vollfertigteilbauweise – gehört zu den Kernkompetenzen unserer langjährigen Mitarbeiter. Auf Wunsch in schnittstellenarmer Abwicklung mit zugehörigem Tiefbau und Außenanlagen.",
+      "Ein guter Rohbau beginnt lange vor dem ersten Beton. Entscheidend sind Abläufe, Schnittstellen und eine Ausführung, auf die die nächsten Gewerke aufbauen können.",
+    secondText:
+      "Wo es sinnvoll ist, verbinden wir Hochbau, Tiefbau und Außenanlagen zu einer abgestimmten Projektabwicklung.",
     leistungen: [
       "Rohbau",
       "Mauerwerk",
       "Stahlbetonbau",
-      "Konventionelle Bauweise",
       "Halbfertigteilbauweise",
       "Vollfertigteilbauweise",
+      "Tiefbau und Außenanlagen (schnittstellenarm)",
     ],
-    ctaLabel: "HOCHBAU ENTDECKEN",
+    ctaLabel: "HOCHBAUPROJEKT ANFRAGEN",
     navLabel: "Hochbau",
+    tag: "HOCHBAU",
   },
 ];
 
